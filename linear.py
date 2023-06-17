@@ -22,8 +22,7 @@ class Linear():
         # Backward pass:
         self.dW = None
         self.db = None
-        self.dA = None
-        self.dZ = None
+        self.delta = None
 
     def random_initialize(self):
         """
@@ -32,7 +31,7 @@ class Linear():
         """
         self.W = np.random.randn(
             self.input_dim, self.output_dim) * np.sqrt(2 / self.input_dim)
-        self.b = np.zeros(shape=(self.output_dim, 1))
+        self.b = np.zeros(shape=(self.output_dim))
 
     def forward(self):
         """
@@ -44,7 +43,7 @@ class Linear():
         else:
             prev_Z = self.prev_layer.A
 
-        self.A = self.W.T @ prev_Z + self.b
+        self.A = prev_Z @ self.W + self.b.T
         self.Z = self.activation_func(self.A)
 
     def backward(self):
@@ -57,16 +56,15 @@ class Linear():
             prev_Z = self.prev_layer.Z
 
         if self.next_layer is None:
-            next_dA = self.model.calculate_cost_derivative(self.A)
+            next_delta = self.model.calculate_loss_derivative(self.A)
         else:
-            next_dA = self.next_layer.dA
+            next_delta = self.next_layer.delta
 
         m = prev_Z.shape[1]
 
-        self.dZ = next_dA * self.d_activation_func(self.A)
-        self.dA = self.W @ self.dZ
-        self.dW = (self.dA.T @ prev_Z) / m
-        self.db = np.sum(self.dA, axis=1, keepdims=True) / m
+        self.dW = prev_Z.T @ next_delta / m
+        self.db = np.sum(next_delta, axis=0) / m
+        self.delta = next_delta @ self.W.T * (1 - np.power(prev_Z, 2))
 
     def optimize(self):
         # SGD

@@ -67,8 +67,7 @@ _Each linear layer index $i$ has following attributes:_
 - Backward pass:
 - [x] Derivatives of $L$ respect to weight $w$. Denote $dW$
 - [x] Derivatives of $L$ respect to bias $b$. Denote $db$
-- [x] Derivatives of $L$ respect to activation of next layer. Denote $dA$
-- [x] Derivatives of $z$ respect to activation $a$. Denote $dZ \sim h'(a)$
+- [x] delta $\delta$
 
 ### Implementation for MyModel
 
@@ -81,23 +80,3 @@ _Each linear layer index $i$ has following attributes:_
 - [x] Train dataset
 - [x] Train targets
 - [x] Learning rate
-- Example:
-- Input: (10, 784)
-- Linear1:
-  - W: (784, 1024)
-  - b: (1024)
-  - A: (10, 1024)
-  - Z: (10, 1024)
-  - dW: (784, 1024)
-  - db: (1024)
-  - dA: (10, 1024)
-  - dZ: (10, 1024)
-- Linear2:
-  - W: (1024, 10)
-  - b: (10)
-  - A: (10, 10)
-  - Z: (10, 10)
-  - dW: (1024, 10)
-  - db: (10)
-  - dA: (10, 10)
-  - dZ: (10, 10)

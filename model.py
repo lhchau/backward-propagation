@@ -7,16 +7,12 @@ class MyModel():
     def __init__(self, architecture, input_size, loss_function, learning_rate=0.0075):
         self.learning_rate = learning_rate
         self.layers = self.create_architecture(architecture, input_size)
-        # self.data = train_data
-        # self.targets = train_targets
-
-        self.loss_function, self.d_cost_function = loss_function[loss_function]
+        self.cost_function, self.d_cost_function = loss_functions[loss_function]
 
     def create_architecture(self, architecture, input_size):
         layers = []
 
         for index, arc in enumerate(architecture):
-            print(index)
             if index == 0:
                 input_dim = input_size
             else:
@@ -54,14 +50,15 @@ class MyModel():
             layer.optimize()
 
     def calculate_loss(self, y_hat, targets):
-        return self.cost_function(y_hat, targets)
+        self.targets = targets
+        return self.cost_function(targets, y_hat)
 
-    def calculate_loss_derivative(self, y_hat, targets):
-        return self.d_cost_function(y_hat, targets)
+    def calculate_loss_derivative(self, y_hat):
+        return self.d_cost_function(self.targets, y_hat)
 
     def calculate_accuracy(self, test_data, test_targets):
         # Works for binary input right now
-        self.forward_pass(test_data)
+        self.forward(test_data)
 
         y_hat = self.layers[-1].Z
         pred = np.where(y_hat > 0.5, 1, 0)
