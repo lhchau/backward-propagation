@@ -47,9 +47,6 @@ class Linear():
         self.Z = self.activation_func(self.A)
 
     def backward(self):
-        """
-        Update: dW, db, dA, dZ
-        """
         if self.prev_layer is None:
             prev_Z = self.model.data
         else:
@@ -57,14 +54,17 @@ class Linear():
 
         if self.next_layer is None:
             next_delta = self.model.calculate_loss_derivative(self.A)
+            self.delta = next_delta
         else:
             next_delta = self.next_layer.delta
+            dA = self.d_activation_func(self.A)
+            W_next = self.next_layer.W
+            self.delta = dA * (next_delta @ W_next.T)
 
         m = prev_Z.shape[1]
 
-        self.dW = prev_Z.T @ next_delta / m
-        self.db = np.sum(next_delta, axis=0) / m
-        self.delta = next_delta @ self.W.T * (1 - np.power(prev_Z, 2))
+        self.dW = prev_Z.T @ self.delta / m
+        self.db = np.sum(self.delta, axis=0) / m
 
     def optimize(self):
         # SGD

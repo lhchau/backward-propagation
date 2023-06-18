@@ -37,7 +37,7 @@ _For hidden layer:_
 - Chain rule with activation of next layer
 
 $$
-\delta_j = \frac{\partial E_n}{\partial a_{j}} = \sum_k  \frac{\partial E_n}{\partial a_{k}}  \frac{\partial a_{k}}{\partial a_{j}} = h'(a_j) \sum_k w_{kj} \delta_k
+\delta_j = \frac{\partial E_n}{\partial a_{j}} = \sum_k  \frac{\partial E_n}{\partial a_{k}}  \frac{\partial a_{k}}{\partial a_{j}} = h'(a_j) * \sum_k \delta_k @ w_{kj}^T
 $$
 
 where
